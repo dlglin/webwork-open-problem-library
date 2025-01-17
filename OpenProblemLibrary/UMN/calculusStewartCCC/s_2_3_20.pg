@@ -2,7 +2,6 @@
 ##  Calculus: Limit laws
 ##ENDDESCRIPTION
 
-
 ## DBsubject(Calculus - single variable)
 ## DBchapter(Limits and continuity)
 ## DBsection(Evaluating limits - rational expressions)
@@ -23,45 +22,34 @@
 ## EditionText2('5')
 ## Section2('2.3')
 ## Problem2('26')
-## KEYWORDS('calculus', 'limit laws', 'limit','Product','Quotient','Differentiation')
+## KEYWORDS('calculus', 'limit laws', 'limit', 'Rational Expression')
 
 #####################################################################
-DOCUMENT();        # This should be the first executable line in the problem.
+DOCUMENT();    # This should be the first executable line in the problem.
 
-loadMacros(
-  "PGstandard.pl",
-  "MathObjects.pl",
-  "PGcourse.pl"
-);
-#####################################################################
+loadMacros("PGstandard.pl", "MathObjects.pl", "PGML.pl", "PGcourse.pl");
 
-TEXT(beginproblem());
+Context("Numeric")->variables->are('y' => 'Real');
 
-#####################################################################
+$a   = random(2, 8, 1);
+$ans = Compute("-$a");
 
-Context("Numeric");
+BEGIN_PGML
+Evaluate the limit, if it exists.
 
-$a = random(2,8,1);
+[``\lim_{y \to 0} \left(\frac{[$a]}{y^2+y} - \frac{[$a]}{y}\right)=``][_]{$ans}{5}[@helpLink('limits')@]*
+END_PGML
 
-$ans = Compute("-$a")->reduce;
+BEGIN_PGML_SOLUTION
+Factor the denominator, then subtract the two rational expressions by writing each of them with the least common denominator.
 
-###############################################################
-Context()->texStrings;
+[``\lim_{y \to 0} \left(\frac{[$a]}{y^2+y} - \frac{[$a]}{y}\right)=\lim_{y \to 0} \left(\frac{[$a]}{y(y+1)} - \frac{[$a]}{y}\right)``]
 
-BEGIN_TEXT
-Evaluate the limit, if it exists.  If a limit $BITALIC does not exist, $EITALIC type "DNE".
-\[
-\lim_{y \to 0} \left(\frac{$a}{y^2+y} - \frac{$a}{y}\right)
-\]
-$HR
-Limit: \{ans_rule(20)\}$BR
-END_TEXT
+[``=\lim_{y \to 0} \left(\frac{[$a]}{y(y+1)} - \frac{[$a](y+1)}{y(y+1)}\right)=\lim_{y \to 0} \left(\frac{[$a]-[$a](y+1)}{y(y+1)}\right)``]
 
-Context()->normalStrings;
+[``=\lim_{y \to 0} \left(\frac{[$a]-[$a]y-[$a]}{y(y+1)}\right)=\lim_{y \to 0} \left(\frac{-[$a]y}{y(y+1)}\right)``]
 
-#####################################################################
+[``=\lim_{y \to 0} \left(\frac{-[$a]}{y+1}\right)=\frac{-[$a]}{0+1}=-[$a]``]
+END_PGML_SOLUTION
 
-ANS( $ans->cmp );
-
-
-ENDDOCUMENT();        # This should be the last executable line in the problem.
+ENDDOCUMENT();    # This should be the last executable line in the problem.
