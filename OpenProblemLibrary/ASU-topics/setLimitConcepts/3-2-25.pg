@@ -1,9 +1,6 @@
 ## DESCRIPTION
-## Calculus
+## Calculate a limit by direct substitution
 ## ENDDESCRIPTION
-
-## Tagged by LD
-
 
 ## DBsubject(Calculus - single variable)
 ## DBchapter(Limits and continuity)
@@ -35,31 +32,29 @@
 ## Problem4('')
 ## KEYWORDS('calculus','limits', 'derivatives')
 
+DOCUMENT();    # This should be the first executable line in the problem.
 
-DOCUMENT();        # This should be the first executable line in the problem.
+loadMacros("PGstandard.pl", "PGML.pl", "PGcourse.pl");
 
-loadMacros(
-  "PGstandard.pl",
-  "PGchoicemacros.pl",
-  "MathObjects.pl",
-  "PGcourse.pl"
-);
+$a = random(2, 6);
+$b = random(3, 8);
+$c = random(3, 8);
+$d = random(2, 3);
 
-TEXT(beginproblem());
-$showPartialCorrectAnswers = 1;
+($ansnum, $ansdenom) = reduce($a * $b, $c + $a**$d);
 
-$a = random(2,6);
-$b = random(3,8);
-$c = random(3,8);
-$d = random(2,5);
+$ans = Compute("$ansnum/$ansdenom");
 
-BEGIN_TEXT
-Evaluate the limit
-\[ \lim_{ x \rightarrow $a } \frac{$b x}{$c + x^$d}\]
-If the limit does not exist enter DNE.
-$BR$BR
-Limit = \{ans_rule(25) \}
-END_TEXT
+BEGIN_PGML
+Evaluate the limit.
 
-ANS(Compute(($b*$a)/($c + $a**$d))->cmp());
-ENDDOCUMENT();        # This should be the last executable line in the problem.
+[`` \lim_{ x \rightarrow [$a] } \frac{[$b] x}{[$c] + x^{[$d]}}=``][_]{$ans}{5}[@helpLink('limits')@]*
+END_PGML
+
+BEGIN_PGML_SOLUTION
+This limit can be calculated by direct substitution.
+
+[`` \lim_{ x \rightarrow [$a] } \frac{[$b] x}{[$c] + x^{[$d]}}=\frac{[$b]([$a])}{[$c]+([$a])^{[$d]}}=[$ans->{correct_ans_latex_string}]``]
+END_PGML_SOLUTION
+
+ENDDOCUMENT();    # This should be the last executable line in the problem.
