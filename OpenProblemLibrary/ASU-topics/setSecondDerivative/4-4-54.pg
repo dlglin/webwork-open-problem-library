@@ -12,202 +12,143 @@
 ## Level(4)
 ## KEYWORDS('second derivative', 'maxima', 'minima', 'inflection point')
 
-DOCUMENT();        # This should be the first executable line in the problem.
+DOCUMENT();    # This should be the first executable line in the problem.
 
-loadMacros(
-  "PGstandard.pl",
-  "PGchoicemacros.pl",
-  "extraAnswerEvaluators.pl",
-  "PGcourse.pl"
-);
+loadMacros("PGstandard.pl", "PGML.pl", "parserImplicitPlane.pl", "PGcourse.pl");
 
+Context()->noreduce('(-x)/y');
 
-$a = random(2,7,1);
-$b = random(2,7,1);
-$c = random(2,7,1);
-$d = random(2,7,1);
+$a      = random(2, 7, 1);
+$d      = non_zero_random(-7, 7, 1);
+$f      = Formula("($a*x+1)/(x-$d)")->reduce();
+$fpnum  = -$a * $d - 1;
+$fp     = Formula("$fpnum/(x-$d)^2")->reduce();
+$fppnum = 2 * ($a * $d + 1);
+$fpp    = Formula("$fppnum/(x-$d)^3")->reduce();
 
-TEXT(beginproblem());
+if ($d > 0) {
+    $inc          = List("None");
+    $dec          = List(Interval("(-inf,$d)"), Interval("($d,inf)"));
+    $fpsign       = "negative";
+    $fdir         = "decreasing";
+    $fnotdir      = "increasing";
+    $cu           = List(Interval("($d,inf)"));
+    $cd           = List(Interval("(-inf,$d)"));
+    $fppsignleft  = "negative";
+    $fppsignright = "positive";
+    $fconcleft    = "concave down";
+    $fconcright   = "concave up";
+    $VAleft       = "-\infty";
+    $VAright      = "\infty";
+} else {
+    $inc          = List(Interval("(-inf,$d)"), Interval("($d,inf)"));
+    $dec          = List("None");
+    $fpsign       = "positive";
+    $fdir         = "increasing";
+    $fnotdir      = "decreasing";
+    $cu           = List(Interval("(-inf,$d)"));
+    $cd           = List(Interval("($d,inf)"));
+    $fppsignleft  = "positive";
+    $fppsignright = "negative";
+    $fconcleft    = "concave up";
+    $fconcright   = "concave down";
+    $VAleft       = "\infty";
+    $VAright      = "-\infty";
+}
 
-$showPartialCorrectAnswers = 1;
+BEGIN_PGML
+Suppose that [`` f(x) = [$f]``]
 
-TEXT(EV2(<<EOT));
-Suppose that
-\[ f(x) = \frac{$a + $b x}{$c - $d x}.  \]
-$BR
-$BR
-(A) Find all critical values of \(f\), compute their
-average, and enter it below.
-$BR
-Note: If there are no critical values, enter -1000.
-$BR
-Average of critical values = \{ans_rule(12)\}
-$PAR
-$PAR
-EOT
+(A) Find all critical values of [`f`].  
+Enter a list of [`x`]-values separated by commas.  If there are no critical values, enter [|None|]*.
 
-@answers = (num_cmp(-1000) );
+Critical values: [`x=`][_]{"None"}{5}
+END_PGML
 
-ANS(@answers );
+BEGIN_PGML_SOLUTION
+Find the first derivative: [``f'(x)=[$fp]``]
 
-TEXT(EV2(<<EOT));
-(B) Use interval notation to indicate where \( f(x) \) is increasing.
-$PAR
-$PAR
-$BBOLD Note: $EBOLD Enter 'I' for \(\infty\), '-I' for \(-\infty\), and 'U' for the union symbol. $BR
-If you have extra boxes, fill each in with an 'x'.
-$PAR
+The expression [``[$fp]``] will never equal 0, so there are no critical numbers.
+END_PGML_SOLUTION
 
-Increasing:
-$BR
-\{ans_rule(25)\} 
-$PAR
-$PAR
-EOT
+BEGIN_PGML
+(B) List the open intervals on which [`f`] is increasing and decreasing.  Your answers should be a list of intervals separated by commas, or the word [|None|]* if there are no such intervals.
 
-@answers = (interval_cmp("(-I,$c/$d)U($c/$d,I)")); 
+- [`f`] is increasing on the intervals [_]{$inc}{20}
+- [`f`] is decreasing on the intervals [_]{$dec}{20}
 
-ANS(@answers );
+END_PGML
 
-TEXT(EV2(<<EOT));
-$BR
-(C) Use interval notation to indicate where \( f(x) \) is decreasing.
-$BR
-Decreasing:
-$BR
-\{ans_rule(25)\} 
-$PAR
-$PAR
-EOT
+BEGIN_PGML_SOLUTION
+The first derivative [``f'(x)=[$fp]``] is undefined at [`x=[$d]`] and [$fpsign] everywhere else, so the function is [$fdir] on the intervals [`(-\infty,[$d])`] and [`([$d],\infty)`], and [$fnotdir] nowhere.
+END_PGML_SOLUTION
 
-@answers = (str_cmp("x")); 
+BEGIN_PGML
 
-ANS(@answers );
+(C) Find the \(x\)-coordinates of all local maxima and minima of [`f`].  Enter a list of [`x`]-values separated by commas.  If there are no such values, enter [|None|]*.
+- [`f`] has local maxima when [`x=`][_]{"None"}{5}.
+- [`f`] has local minima when [`x=`][_]{"None"}{5}.
 
-TEXT(EV2(<<EOT));
-$BR
-(D) Find the \(x\)-coordinates of all local maxima of \(f\),
-compute their average, and enter it below.
-$BR
-Note: If there are no local maxima, enter -1000.
-$PAR
-Average of \(x\) values = \{ans_rule(10)\}
-$PAR
-$PAR
-EOT
+END_PGML
 
-@answers = (num_cmp(-1000) );
+BEGIN_PGML_SOLUTION
+Since there are no critical points, the function has no local maxima nor minima.
+END_PGML_SOLUTION
 
-ANS(@answers );
+BEGIN_PGML
+(D) List the open intervals on which [`f`] is concave up and concave down.    Your answers should be a list of intervals separated by commas, or the word [|None|]* if there are no such intervals.
+- [`f`] is concave up on the intervals [_]{$cu}{10}
+- [`f`] is concave down on the intervals [_]{$cd}{10}
 
-TEXT(EV2(<<EOT));
-$BR
-(E) Find the \(x\)-coordinates of all local minima of \(f\),
-compute their average, and enter it below.
-$BR
-Note: If there are no local minima, enter -1000.
-$PAR
-Average of \(x\) values = \{ans_rule(10)\}
-$PAR
-$PAR
-EOT
+END_PGML
 
-@answers = (num_cmp(-1000) );
+BEGIN_PGML_SOLUTION
+Find the second derivative: [``f''(x)=[$fpp]``]
 
-ANS(@answers );
+[`f''(x)`] is [$fppsignleft] if [`x<[$d]`], and [$fppsignright] if [`x>[$d]`], so [`f`] is [$fconcleft] on the interval [`(-\infty,[$d])`] and [$fconcright] on the interval [`([$d],\infty)`].
+END_PGML_SOLUTION
 
-TEXT(EV2(<<EOT));
-$BR
-(F) Use interval notation to indicate where \( f(x) \) is concave up.
-$BR
-Concave up:
-$BR
-\{ans_rule(25)\} 
-$PAR
-$PAR
-EOT
+BEGIN_PGML
+(E) Find the [`x`]-coordinates of all inflection points of [`f`].  Enter a list of [`x`]-values separated by commas.  If there are no such values, enter [|None|]*.
 
-@answers = (interval_cmp("(-I,$c/$d)")); 
+[`f`] has inflection points when [`x=`][_]{"None"}{10}.
 
-ANS(@answers );
+END_PGML
 
-TEXT(EV2(<<EOT));
-$BR
-(G) Use interval notation to indicate where \( f(x) \) is concave down.
-$BR
-Concave down:
-$BR
-\{ans_rule(25)\} 
-$PAR
-$PAR
-EOT
+BEGIN_PGML_SOLUTION
+The only value of [`x`] where the sign of [`f''(x)`] changes is [`x=[$d]`], but this is not in the domain of [`f`], so there are no points of inflection.
+END_PGML_SOLUTION
 
-@answers = (interval_cmp("($c/$d,I)")); 
+Context("ImplicitPlane")->variables->are('x' => 'Real', 'y' => 'Real');
+$HA = List(ImplicitPlane("y=$a"));
 
-ANS(@answers );
+BEGIN_PGML
+(F) Write the *equations* of all horizontal asymptotes of [`f`].  If there are no horizontal asymptotes, enter [|None|]*.
 
-TEXT(EV2(<<EOT));
-$BR
-(H) Find all inflection points of \(f\), compute their
-average, and enter it below.
-$BR
-Note: If there are no inflection points, enter -1000.
-$BR
-Average of inflection points = \{ans_rule(12)\}
-$PAR
-$PAR
-EOT
+The equations of the horizontal asymptotes are [_]{$HA}{10}.
 
-@answers = (num_cmp(-1000) );
+END_PGML
+BEGIN_PGML_HINT
+Remember that the equation of a horizontal asymptote has the form [`y=a`].
+END_PGML_HINT
+BEGIN_PGML_SOLUTION
+[``\lim_{x\to\pm\infty}[$f]=[$a]``], so the only horizontal asymptote is [`y=[$a]`].
+END_PGML_SOLUTION
 
-ANS(@answers );
+$VA = List(ImplicitPlane("x=$d"));
+BEGIN_PGML
+(G) Write the *equations* of all vertical asymptotes of [`f`].  If there are no vertical asymptotes, enter [|None|]*.
 
-TEXT(EV2(<<EOT));
-$BR
-(I) Find all horizontal asymptotes of \(f\), compute the
-average of the \(y\) values, and enter it below.
-$BR
-Note: If there are no horizontal asymptotes, enter -1000.
-$BR
-Average of horizontal asymptotes = \{ans_rule(12)\}
-$PAR
-$PAR
-EOT
+The equations of the vertical asymptotes are [_]{$VA}{10}.
 
-@answers = (num_cmp(-$b/$d) );
+END_PGML
+BEGIN_PGML_HINT
+Remember that the equation of a vertical asymptote has the form [`x=a`].
+END_PGML_HINT
+BEGIN_PGML_SOLUTION
+The only value of [`x`] which makes the denominator evaluate to 0 is [`x=[$d]`].
 
-ANS(@answers );
+Observe that [``\lim_{x\to [$d]^{-}}[$f]=[$VAleft]``] and [``\lim_{x\to [$d]^{+}}[$f]=[$VAright]``], so the only vertical asymptote is [`x=[$d]`].
+END_PGML_SOLUTION
 
-TEXT(EV2(<<EOT));
-$BR
-(J) Find all vertical asymptotes of \(f\), compute the
-average of the \(x\) values, and enter it below.
-$BR
-Note: If there are no vertical asymptotes, enter -1000.
-$BR
-Average of vertical asymptotes = \{ans_rule(12)\}
-$PAR
-$PAR
-EOT
-
-@answers = (num_cmp($c/$d) );
-
-ANS(@answers );
-
-TEXT(EV2(<<EOT));
-$BR
-(K) Use all of the preceding information to sketch a
-graph of \(f\).  When you're finished, enter a "1" in the box
-below.
-$BR
-$BR
-Graph Complete: \{ans_rule(12)\}
-$PAR
-$PAR
-EOT
-
-@answers = (num_cmp(1) );
-
-ANS(@answers );
-
-ENDDOCUMENT();        # This should be the last executable line in the problem.
+ENDDOCUMENT();    # This should be the last executable line in the problem.
